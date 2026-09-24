@@ -348,3 +348,248 @@ void main() {
 
   acc.balance = -50;
 }
+
+//task 7------------------------
+
+enum Day { monday, tuesday, wednesday, thursday, friday, saturday, sunday }
+
+void main() {
+  for (Day d in Day.values) {
+    print('${d.index}: ${d.name}');
+  }
+}
+
+enum Status { loading, success, error }
+
+String statusText(Status s) {
+  return switch (s) {
+    Status.loading => 'Please wait...',
+    Status.success => 'Done!',
+    Status.error => 'Something went wrong',
+  };
+}
+
+void main() {
+  print(statusText(Status.loading));
+  print(statusText(Status.error));
+}
+
+abstract class Shape {
+  double area();
+}
+
+enum Square implements Shape {
+  small(2),
+  medium(4),
+  large(6);
+
+  final double side;
+  const Square(this.side);
+
+  @override
+  double area() => side * side;
+
+  double get perimeter => 4 * side;
+}
+
+void main() {
+  for (Square s in Square.values) {
+    print('${s.name}: area ${s.area()}, perimeter ${s.perimeter}');
+  }
+}
+
+enum Level { low, medium, high }
+
+Level? parseLevel(String raw) {
+  try {
+    return Level.values.byName(raw);
+  } on ArgumentError {
+    return null;
+  }
+}
+
+void main() {
+  print(parseLevel('high'));
+  print(parseLevel('extreme'));
+  print(parseLevel('High'));
+}
+
+//task 8--------------------------
+
+class Animal {
+  void makeSound() => print('Some generic sound');
+}
+
+class Dog extends Animal {
+  @override
+  void makeSound() => print('Woof');
+}
+
+void main() {
+  Animal a = Animal();
+  Dog d = Dog();
+
+  a.makeSound();
+  d.makeSound();
+}
+
+class Vehicle {
+  final String brand;
+  Vehicle(this.brand);
+
+  void start() => print('$brand starting...');
+}
+
+class ElectricCar extends Vehicle {
+  final int batteryCapacity;
+  ElectricCar(super.brand, this.batteryCapacity);
+}
+
+void main() {
+  ElectricCar car = ElectricCar('Tesla', 75);
+  car.start();
+  print(car.batteryCapacity);
+}
+
+class Shape {
+  String name;
+  Shape(this.name);
+
+  void describe() => print('I am a $name');
+}
+
+class Polygon extends Shape {
+  int sides;
+  Polygon(super.name, this.sides);
+
+  void showSides() => print('$name has $sides sides');
+}
+
+class Triangle extends Polygon {
+  double base;
+  double height;
+  Triangle(this.base, this.height) : super('Triangle', 3);
+
+  double get area => 0.5 * base * height;
+}
+
+void main() {
+  Triangle t = Triangle(4, 3);
+  t.describe();
+  t.showSides();
+  print(t.area);
+}
+
+abstract class Employee {
+  String name;
+  Employee(this.name);
+
+  double monthlyPay();
+
+  void printPay() => print('$name earns ${monthlyPay()}');
+}
+
+class FullTime extends Employee {
+  double salary;
+  FullTime(super.name, this.salary);
+
+  @override
+  double monthlyPay() => salary;
+}
+
+class PartTime extends Employee {
+  double hours;
+  double rate;
+  PartTime(super.name, this.hours, this.rate);
+
+  @override
+  double monthlyPay() => hours * rate;
+}
+
+void main() {
+  FullTime a = FullTime('Ali', 3000);
+  PartTime b = PartTime('Vali', 20, 15);
+
+  a.printPay();
+  b.printPay();
+}
+
+//task 9--------------------------
+
+abstract class DBConnector {
+  void connect(String host);
+  String query(String sql);
+}
+
+class MySQLConnector implements DBConnector {
+  @override
+  void connect(String host) => print('MySQL connected to $host');
+
+  @override
+  String query(String sql) => 'MySQL ran: $sql';
+}
+
+void main() {
+  DBConnector db = MySQLConnector();
+  db.connect('localhost');
+  print(db.query('SELECT 1'));
+}
+
+mixin Flyable {
+  int altitude = 0;
+
+  void fly() {
+    altitude += 100;
+    print('Flying at $altitude m');
+  }
+}
+
+class Bird with Flyable {}
+
+void main() {
+  Bird b = Bird();
+  b.fly();
+  b.fly();
+}
+
+mixin Walker {
+  void walk() => print('Walking');
+}
+
+mixin Swimmer {
+  void swim() => print('Swimming');
+}
+
+mixin Flyable {
+  void fly() => print('Flying');
+}
+
+class Duck with Walker, Swimmer, Flyable {}
+
+void main() {
+  Duck d = Duck();
+  d.walk();
+  d.swim();
+  d.fly();
+}
+
+class Animal {
+  String name;
+  Animal(this.name);
+}
+
+mixin Barker on Animal {
+  void bark() => print('$name says Woof');
+}
+
+class Dog extends Animal with Barker {
+  Dog(super.name);
+}
+
+void main() {
+  Dog d = Dog('Rex');
+  d.bark();
+}
+
+//task 10--------------------------
+
