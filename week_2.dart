@@ -207,3 +207,144 @@ void main() {
 
 //task 5-----------------------------
 
+void main() {
+  // Average of three test scores
+  int a = 80;
+  int b = 90;
+  int c = 70;
+
+  /* Formula: average = (a + b + c) / 3
+     Step 1: 80 + 90 + 70 = 240
+     Step 2: 240 / 3 = 80 */
+  double average = (a + b + c) / 3;
+
+  print(average);   // 80.0
+}
+
+/// Utility methods for checking user input.
+class Validator {
+  /// Checks whether [age] is between 0 and 120.
+  ///
+  /// Returns `true` if [age] is in range, otherwise `false`.
+  bool isValidAge(int age) => age >= 0 && age <= 120;
+
+  /// Converts [text] to a percentage from 0 to 100.
+  ///
+  /// Returns the number as an [int].
+  ///
+  /// Throws a [FormatException] if [text] is not a number.
+  /// Throws an [ArgumentError] if the number is outside 0 to 100.
+  int parsePercent(String text) {
+    int value = int.parse(text);
+    if (value < 0 || value > 100) {
+      throw ArgumentError('Percent must be 0-100, got $value');
+    }
+    return value;
+  }
+}
+
+/// Calculates the **total price** after a discount.
+///
+/// Rules:
+/// * The discount is a fraction, like `0.25` for 25%.
+/// * The price must be positive.
+///
+/// Example:
+/// ```dart
+/// double p = finalPrice(100, 0.25);
+/// print(p);   // 75.0
+/// ```
+double finalPrice(double price, double discount) => price * (1 - discount);
+
+class Animal {
+  /// Returns the sound the animal makes.
+  String speak() => '...';
+
+  /// Old way to get the sound.
+  ///
+  /// Use [speak] instead.
+  @deprecated
+  String makeSound() => speak();
+}
+
+class Dog extends Animal {
+  /// Dogs bark instead of using the generic sound.
+  @override
+  String speak() => 'Woof';
+}
+
+void main() {
+  print(Animal().speak());   // ...
+  print(Dog().speak());      // Woof
+}
+
+//task 6----------------------
+
+class Person {
+  String name;
+  int age;
+
+  Person(this.name, this.age);
+}
+
+void main() {
+  Person p = Person('Adxam', 20);
+  print('${p.name} is ${p.age}');
+}
+
+class Person {
+  final String name;
+  final int age;
+
+  Person(String name, int age)
+      : assert(age >= 0 && age <= 120, 'Age must be 0-120'),
+        name = name.trim(),
+        age = age;
+}
+
+void main() {
+  Person a = Person('  Ali ', 25);
+  print('${a.name}, ${a.age}');
+
+  Person b = Person('Vali', 200);
+}
+
+class Logger {
+  static final Logger _instance = Logger._internal();
+
+  factory Logger() => _instance;
+
+  Logger._internal();
+
+  void log(String msg) => print('LOG: $msg');
+}
+
+void main() {
+  Logger a = Logger();
+  Logger b = Logger();
+
+  print(identical(a, b));
+  a.log('Hello');
+}
+
+class Account {
+  double _balance = 0;
+
+  double get balance => _balance;
+
+  set balance(double value) {
+    if (value < 0) {
+      throw ArgumentError('Balance cannot be negative');
+    }
+    _balance = value;
+  }
+}
+
+void main() {
+  Account acc = Account();
+
+  acc.balance = 100;
+  print(acc.balance);
+
+  acc.balance = -50;
+}
