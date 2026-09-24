@@ -81,3 +81,86 @@ void main() {
 
 // task 3---------------------------
 
+void main() {
+  int n = -4;
+
+  if (n > 0) {
+    print('$n is positive');
+  } else if (n < 0) {
+    print('$n is negative');
+  } else {
+    print('$n is zero');
+  }
+}
+
+void main() {
+  int n = 5;
+  int result = 1;
+
+  for (int i = 1; i <= n; i++) {
+    result = result * i;
+  }
+
+  print('Factorial (for): $result');
+}
+
+void main() {
+  int n = 5;
+  int result = 1;
+
+  for (int i in List.generate(n, (index) => index + 1)) {
+    result = result * i;
+  }
+
+  print('Factorial (for-in): $result');
+}
+
+void main() {
+  int target = 7;
+  List<int> guesses = [3, 9, 5, 7, 2];
+  int i = 0;
+
+  while (i < guesses.length) {
+    int guess = guesses[i];
+
+    if (guess == target) {
+      print('Guess $guess: Correct!');
+      break;
+    } else if (guess < target) {
+      print('Guess $guess: too low');
+    } else {
+      print('Guess $guess: too high');
+    }
+
+    i++;
+  }
+}
+
+void main() {
+  outer:
+  for (int i = 1; i <= 3; i++) {
+    for (int j = 1; j <= 3; j++) {
+      if (i * j == 4) {
+        print('Found i=$i, j=$j, stopping everything');
+        break outer;
+      }
+      print('i=$i, j=$j');
+    }
+  }
+  print('Done');
+}
+
+void main() {
+  outer:
+  for (int i = 1; i <= 3; i++) {
+    for (int j = 1; j <= 3; j++) {
+      if (j == 2) {
+        continue outer;
+      }
+      print('i=$i, j=$j');
+    }
+  }
+}
+
+// task 4 ---------------------------
+
