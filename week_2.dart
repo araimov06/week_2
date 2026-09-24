@@ -29,3 +29,37 @@ void main(List<String> arguments) {
 
 //task 2
 
+void main () {
+  var mutableName = 'Alice ';
+  final String birthCity = 'Tashkent ';
+  const double pi = 3.14159;
+  late String lazyDescription ;
+
+  lazyDescription = 'Initialized later!';
+  print('$mutableName born in $birthCity . Math constant : $pi. Status :
+  $lazyDescription ');
+}
+
+void main(){
+  int age=20;
+  double gpa=3.5;
+  String country="Kiribati";
+  bool isStudent=false;
+}
+
+void main() {
+  final now = DateTime.now();   // works
+  const year = DateTime.now();  //error
+}
+
+void main() {
+  String? nickname;
+  String name = 'Alice';
+  int? score;
+
+  String shown = nickname ?? 'No nickname';
+  int total = (score ?? 0) + 10;
+
+  print(shown);
+  print(total);
+}
