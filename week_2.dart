@@ -164,3 +164,46 @@ void main() {
 
 // task 4 ---------------------------
 
+bool isEven(int n) => n % 2 == 0;
+
+void main() {
+  print(isEven(4));
+  print(isEven(7));
+}
+
+String decorate(String word, [String prefix = '', String suffix = '']) {
+  return '$prefix$word$suffix';
+}
+
+void main() {
+  print(decorate('cat'));
+  print(decorate('cat', 'big '));
+  print(decorate('cat', 'big ', '!'));
+}
+
+List<int> transformAll(List<int> numbers, int Function(int) transformer) {
+  List<int> result = [];
+  for (int n in numbers) {
+    result.add(transformer(n));
+  }
+  return result;
+}
+
+void main() {
+  List<int> nums = [1, 2, 3, 4];
+
+  print(transformAll(nums, (x) => x * 2));
+  print(transformAll(nums, (x) => x + 10));
+}
+
+int fib(int n) {
+  if (n <= 1) return n;
+  return fib(n - 1) + fib(n - 2);
+}
+
+void main() {
+  print(fib(5));
+}
+
+//task 5-----------------------------
+
