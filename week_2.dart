@@ -593,3 +593,250 @@ void main() {
 
 //task 10--------------------------
 
+abstract class Shape {
+  double area();
+}
+
+class Circle implements Shape {
+  double radius;
+  Circle(this.radius);
+
+  @override
+  double area() => 3.14 * radius * radius;
+}
+
+class Rectangle implements Shape {
+  double width;
+  double height;
+  Rectangle(this.width, this.height);
+
+  @override
+  double area() => width * height;
+}
+
+void main() {
+  List<Shape> shapes = [Circle(2), Rectangle(3, 4)];
+
+  for (Shape s in shapes) {
+    print(s.area());
+  }
+}
+
+void main() {
+  Object x = 42;
+
+  if (x is int) {
+    print('int, doubled: ${x * 2}');
+  }
+
+  if (x is! String) {
+    print('not a String');
+  }
+
+  Object text = 'hello';
+  String s = text as String;
+  print(s.length);
+
+  try {
+    String bad = x as String;
+    print(bad);
+  } catch (e) {
+    print('Cast failed');
+  }
+}
+
+class Repository<T> {
+  final List<T> _items = [];
+
+  void add(T item) => _items.add(item);
+
+  T get(int index) => _items[index];
+
+  int get count => _items.length;
+}
+
+void main() {
+  Repository<String> names = Repository<String>();
+  names.add('Ali');
+  names.add('Vali');
+
+  Repository<int> scores = Repository<int>();
+  scores.add(80);
+
+  print(names.get(1));
+  print(scores.get(0) + 5);
+  print(names.count);
+}
+
+sealed class Shape {}
+
+class Circle extends Shape {
+  double radius;
+  Circle(this.radius);
+}
+
+class Square extends Shape {
+  double side;
+  Square(this.side);
+}
+
+class Triangle extends Shape {
+  double base;
+  double height;
+  Triangle(this.base, this.height);
+}
+
+double area(Shape s) {
+  return switch (s) {
+    Circle c => 3.14 * c.radius * c.radius,
+    Square q => q.side * q.side,
+    Triangle t => 0.5 * t.base * t.height,
+  };
+}
+
+void main() {
+  print(area(Circle(2)));
+  print(area(Square(3)));
+  print(area(Triangle(4, 3)));
+}
+
+//task 11--------------------------
+
+Future<Map<String, dynamic>> fetchUser(int id) async {
+  await Future.delayed(const Duration(seconds: 2));
+  return {'id': id, 'name': 'Ali', 'age': 20};
+}
+
+void main() async {
+  print('Looking up user...');
+  Map<String, dynamic> user = await fetchUser(1024);
+  print(user);
+}
+
+Future<int> task(int n, int seconds) async {
+  await Future.delayed(Duration(seconds: seconds));
+  return n * 10;
+}
+
+void main() async {
+  List<int> results = await Future.wait([
+    task(1, 3),
+    task(2, 1),
+    task(3, 2),
+  ]);
+
+  int total = results.fold(0, (sum, x) => sum + x);
+
+  print(results);
+  print(total);
+}
+
+import 'dart:async';
+
+void main() {
+  int count = 0;
+  late StreamSubscription<int> sub;
+
+  Stream<int> ticks = Stream.periodic(
+    const Duration(seconds: 1),
+    (i) => i + 1,
+  );
+
+  sub = ticks.listen((value) {
+    print('Tick $value');
+    count++;
+
+    if (count == 5) {
+      sub.cancel();
+      print('Cancelled');
+    }
+  });
+}
+
+void main() async {
+  Stream<int> source = Stream.fromIterable([1, 2, 2, 3, 4, 4, 5, 6]);
+
+  Stream<int> result = source
+      .where((n) => n.isEven)
+      .map((n) => n * 10)
+      .distinct();
+
+  await for (int v in result) {
+    print(v);
+  }
+}
+
+//task 12-------------------------
+
+void divide(int a, int b) {
+  try {
+    int result = a ~/ b;
+    print('$a / $b = $result');
+  } on UnsupportedError {
+    print('Cannot divide $a by zero');
+  }
+}
+
+void main() {
+  divide(10, 2);
+  divide(10, 0);
+}
+
+void greet(String? name) {
+  if (name == null || name.isEmpty) {
+    throw ArgumentError('name cannot be empty or null');
+  }
+  print('Hello, $name');
+}
+
+void main() {
+  greet('Ali');
+
+  try {
+    greet('');
+  } on ArgumentError catch (e) {
+    print('Caught: ${e.message}');
+  }
+
+  try {
+    greet(null);
+  } on ArgumentError catch (e) {
+    print('Caught: ${e.message}');
+  }
+}
+
+void risky(int n) {
+  if (n == 1) throw FormatException('bad format');
+  if (n == 2) throw ArgumentError('bad argument');
+  if (n == 3) throw StateError('bad state');
+}
+
+void main() {
+  for (int i = 1; i <= 4; i++) {
+    try {
+      risky(i);
+      print('$i: ok');
+    } on FormatException {
+      print('$i: format problem');
+    } on ArgumentError catch (e) {
+      print('$i: argument problem: ${e.message}');
+    } catch (e) {
+      print('$i: something else: $e');
+    }
+  }
+}
+
+void level2() => throw StateError('something broke');
+
+void level1() => level2();
+
+void main() {
+  try {
+    level1();
+  } catch (e, stackTrace) {
+    print('Error: $e');
+    print('Stack trace:');
+    print(stackTrace);
+  }
+}
+
