@@ -1,4 +1,4 @@
-// task 1
+// task 1---------------------------
 void main(List <String > arguments ) {
     print('Hello , Dart World!');
     if (arguments.isNotEmpty) {
@@ -27,7 +27,7 @@ void main(List<String> arguments) {
 }
 
 
-//task 2
+// task 2---------------------------
 
 void main () {
   var mutableName = 'Alice ';
@@ -63,3 +63,21 @@ void main() {
   print(shown);
   print(total);
 }
+
+void main() {
+  dynamic name = 'Alice';
+  dynamic age = 20;
+  dynamic gpa = 3.8;
+
+  String studentName = name;
+  int studentAge = age;
+  double studentGpa = gpa;
+
+  print(studentName);
+  print(studentAge);
+  print(studentGpa);
+}
+
+
+// task 3---------------------------
+
