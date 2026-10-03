@@ -282,3 +282,91 @@ linter:
 
 
 
+class Temperature {
+  double _celsius;
+
+  Temperature(this._celsius);
+
+  double get celsius => _celsius;
+
+  set celsius(double value) {
+    if (value < -273.15) {
+      throw ArgumentError('Below absolute zero');
+    }
+    _celsius = value;
+  }
+
+  double get fahrenheit => _celsius * 9 / 5 + 32;
+}
+
+void main() {
+  final t = Temperature(25);
+  print(t.celsius);
+  print(t.fahrenheit);
+
+  t.celsius = 100;
+  print(t.fahrenheit);
+
+  try {
+    t.celsius = -300;
+  } catch (e) {
+    print(e);
+  }
+}
+
+
+class UserDto {
+  final String name;
+  final int age;
+  final String email;
+
+  const UserDto({
+    required this.name,
+    required this.age,
+    required this.email,
+  });
+}
+
+void main() {
+  const a = UserDto(name: 'Alice', age: 20, email: 'a@mail.com');
+  const b = UserDto(name: 'Alice', age: 20, email: 'a@mail.com');
+
+  print(a.name);
+  print(identical(a, b));
+}
+
+
+class Rectangle {
+  final double width;
+  final double height;
+
+  Rectangle(this.width, this.height);
+
+  Rectangle.square(double side) : this(side, side);
+
+  Rectangle.fromArea(double area) : this.square(_sqrt(area));
+
+  static double _sqrt(double v) {
+    double x = v;
+    for (int i = 0; i < 30; i++) {
+      x = (x + v / x) / 2;
+    }
+    return x;
+  }
+
+  double get area => width * height;
+}
+
+void main() {
+  final r1 = Rectangle(3, 4);
+  final r2 = Rectangle.square(5);
+  final r3 = Rectangle.fromArea(16);
+
+  print(r1.area);
+  print(r2.area);
+  print(r3.width);
+}
+
+
+//task 7----------------------------
+
