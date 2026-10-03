@@ -449,3 +449,111 @@ void main() {
 
 
 //task 8-----------------------
+
+
+abstract class Employee {
+  final String name;
+  final double baseSalary;
+
+  Employee(this.name, this.baseSalary);
+
+  double bonus();
+
+  double totalPay() => baseSalary + bonus();
+
+  void printPay() => print('$name earns ${totalPay()}');
+}
+
+class Manager extends Employee {
+  Manager(super.name, super.baseSalary);
+
+  @override
+  double bonus() => baseSalary * 0.2;
+}
+
+class Intern extends Employee {
+  Intern(super.name, super.baseSalary);
+
+  @override
+  double bonus() => 100;
+}
+
+void main() {
+  Manager('Ann', 5000).printPay();
+  Intern('Bob', 1000).printPay();
+}
+
+//shapes.dart->>>
+final class Circle {
+  final double radius;
+  Circle(this.radius);
+
+  double area() => 3.14 * radius * radius;
+}
+
+base class Account {
+  double balance;
+  Account(this.balance);
+
+  void deposit(double amount) {
+    balance += amount;
+  }
+}
+
+//main.dart->>
+import 'shapes.dart';
+
+base class Savings extends Account {
+  Savings(super.balance);
+}
+
+void main() {
+  final s = Savings(100);
+  s.deposit(50);
+  print(s.balance);
+  print(Circle(2).area());
+}
+
+
+class Config {
+  final String name;
+  final int version;
+
+  const Config(this.name, this.version);
+}
+
+class Device {
+  final Config config;
+
+  const Device(this.config);
+
+  String info() => '${config.name} v${config.version}';
+}
+
+class Phone extends Device {
+  final int storage;
+
+  const Phone(super.config, this.storage);
+
+  @override
+  String info() => '${super.info()}, ${storage}GB';
+}
+
+class Smartphone extends Phone {
+  final bool has5g;
+
+  const Smartphone(super.config, super.storage, {required this.has5g});
+
+  @override
+  String info() => '${super.info()}, 5G: $has5g';
+}
+
+void main() {
+  const cfg = Config('Nova', 2);
+  const p = Smartphone(cfg, 128, has5g: true);
+
+  print(p.info());
+  print(identical(p.config, cfg));
+}
+
+//task 9-----------------------------
