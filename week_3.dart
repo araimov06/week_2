@@ -557,3 +557,407 @@ void main() {
 }
 
 //task 9-----------------------------
+
+
+class Animal {
+  final String name;
+  Animal(this.name);
+}
+
+mixin Barker on Animal {
+  void bark() => print('$name says woof');
+}
+
+class Dog extends Animal with Barker {
+  Dog(super.name);
+}
+
+void main() {
+  Dog('Rex').bark();
+}
+
+
+class Greeter {
+  String greet() => 'Hello';
+}
+
+class A implements Greeter {
+  @override
+  String greet() => 'Hi from A';
+}
+
+mixin GreeterMixin {
+  String greet() => 'Hello';
+}
+
+class B with GreeterMixin {}
+
+void main() {
+  print(A().greet());
+  print(B().greet());
+  print(A() is Greeter);
+  print(B() is GreeterMixin);
+}
+
+
+mixin Notifier {
+  final List<void Function()> _listeners = [];
+
+  void addListener(void Function() l) => _listeners.add(l);
+
+  void notifyListeners() {
+    for (final l in _listeners) {
+      l();
+    }
+  }
+
+  void disposeListeners() => _listeners.clear();
+}
+
+mixin HistoryTracking<T> on Notifier {
+  final List<T> history = [];
+
+  void record(T value) => history.add(value);
+}
+
+mixin Loggable on Notifier {
+  void log(String msg) => print('[LOG] $msg');
+}
+
+class CounterStore with Notifier, HistoryTracking<int>, Loggable {
+  int _value = 0;
+  int get value => _value;
+
+  void increment(int by) {
+    _value += by;
+    record(_value);
+    log('value is $_value');
+    notifyListeners();
+  }
+}
+
+
+void main() {
+  final store = CounterStore();
+  store.addListener(() => print('UI rebuild: ${store.value}'));
+
+  store.increment(5);
+  store.increment(3);
+  print(store.history);
+
+  store.disposeListeners();
+  store.increment(1);
+  print(store.history);
+}
+
+//task 10------------------------
+
+sealed class Shape {}
+
+class Circle extends Shape {
+  final double radius;
+  Circle(this.radius);
+}
+
+class Rectangle extends Shape {
+  final double width, height;
+  Rectangle(this.width, this.height);
+}
+
+class Triangle extends Shape {
+  final double base, height;
+  Triangle(this.base, this.height);
+}
+
+double area(Shape s) => switch (s) {
+      Circle(radius: var r) => 3.14 * r * r,
+      Rectangle(width: var w, height: var h) => w * h,
+      Triangle(base: var b, height: var h) => 0.5 * b * h,
+    };
+
+void main() {
+  print(area(Circle(2)));
+  print(area(Rectangle(3, 4)));
+  print(area(Triangle(6, 5)));
+}
+
+
+abstract class DiscountStrategy {
+  double apply(double price);
+}
+
+class NoDiscount implements DiscountStrategy {
+  @override
+  double apply(double price) => price;
+}
+
+class PercentDiscount implements DiscountStrategy {
+  final double percent;
+  PercentDiscount(this.percent);
+
+  @override
+  double apply(double price) => price * (1 - percent / 100);
+}
+
+class FlatDiscount implements DiscountStrategy {
+  final double amount;
+  FlatDiscount(this.amount);
+
+  @override
+  double apply(double price) => price - amount;
+}
+
+class Cart {
+  DiscountStrategy strategy;
+  Cart(this.strategy);
+
+  double checkout(double price) => strategy.apply(price);
+}
+
+void main() {
+  final cart = Cart(NoDiscount());
+  print(cart.checkout(200));
+
+  cart.strategy = PercentDiscount(10);
+  print(cart.checkout(200));
+
+  cart.strategy = FlatDiscount(30);
+  print(cart.checkout(200));
+}
+
+
+abstract class Plugin {
+  String get name;
+  bool canHandle(String action);
+  void handle(String action, Map<String, dynamic> data);
+}
+
+class EmailPlugin implements Plugin {
+  @override
+  String get name => 'email';
+
+  @override
+  bool canHandle(String action) => action == 'send_email';
+
+  @override
+  void handle(String action, Map<String, dynamic> data) {
+    print('Email to ${data['to']}: ${data['body']}');
+  }
+}
+
+class LogPlugin implements Plugin {
+  @override
+  String get name => 'log';
+
+  @override
+  bool canHandle(String action) => action == 'log';
+
+  @override
+  void handle(String action, Map<String, dynamic> data) {
+    print('LOG: ${data['message']}');
+  }
+}
+
+class PluginManager {
+  final List<Plugin> _plugins = [];
+
+  void register(Plugin p) => _plugins.add(p);
+
+  void dispatch(String action, Map<String, dynamic> data) {
+    for (final p in _plugins) {
+      if (p.canHandle(action)) {
+        p.handle(action, data);
+        return;
+      }
+    }
+    print('No plugin for "$action"');
+  }
+}
+
+void main() {
+  final manager = PluginManager();
+  manager.register(EmailPlugin());
+  manager.register(LogPlugin());
+
+  manager.dispatch('send_email', {'to': 'a@mail.com', 'body': 'Hi'});
+  manager.dispatch('log', {'message': 'started'});
+  manager.dispatch('delete_all', {});
+}
+
+
+//task11-------------------------------
+
+void main() async {
+  final source = Stream.fromIterable([1, 2, 2, 3, 4, 4, 5, 6, 6]);
+
+  final result = source
+      .map((x) => x * 10)
+      .where((x) => x > 20)
+      .distinct();
+
+  await for (final v in result) {
+    print(v);
+  }
+}
+
+
+void main() async {
+  final source = Stream.fromIterable([1, 2, 0, 4, 0, 5]);
+
+  final pipeline = source
+      .map((x) {
+        if (x == 0) throw FormatException('zero not allowed');
+        return 10 ~/ x;
+      })
+      .handleError((e) => print('Error: $e'));
+
+  await for (final v in pipeline) {
+    print(v);
+  }
+}
+
+
+import 'dart:async';
+
+void main() async {
+  final controller = StreamController<String>.broadcast();
+
+  final subA = controller.stream.listen((e) => print('A got: $e'));
+  final subB = controller.stream.listen((e) => print('B got: $e'));
+
+  controller.add('update 1');
+  controller.add('update 2');
+  await Future.delayed(Duration.zero);
+
+  await subA.cancel();
+  controller.add('update 3');
+  await Future.delayed(Duration.zero);
+
+  await controller.close();
+}
+
+
+//task 12--------------------------------
+
+
+int divide(int a, int b) => a ~/ b;
+
+void level2(int x) {
+  print(divide(10, x));
+}
+
+void level1(int x) {
+  level2(x);
+}
+
+void main() {
+  try {
+    level1(0);
+  } catch (e, stackTrace) {
+    print('Error: $e');
+    print('Stack trace:');
+    print(stackTrace);
+  }
+  print('Current position:');
+  print(StackTrace.current);
+}
+
+
+void parseAge(String s) {
+  try {
+    if (s.isEmpty) throw FormatException('bad input');
+    print('Age: ${int.parse(s)}');
+  } on FormatException {
+    print('parseAge: logging the failure');
+    rethrow;
+  }
+}
+
+void main() {
+  try {
+    parseAge('25');
+    parseAge('');
+  } catch (e) {
+    print('main caught: $e');
+  }
+}
+
+
+
+import 'dart:async';
+import 'dart:io';
+
+sealed class Failure {
+  final String message;
+  const Failure(this.message);
+}
+
+class NetworkFailure extends Failure {
+  const NetworkFailure(super.message);
+}
+
+class TimeoutFailure extends Failure {
+  const TimeoutFailure(super.message);
+}
+
+class ServerFailure extends Failure {
+  final int code;
+  const ServerFailure(super.message, this.code);
+}
+
+class UnknownFailure extends Failure {
+  const UnknownFailure(super.message);
+}
+
+class HttpStatusException implements Exception {
+  final int code;
+  HttpStatusException(this.code);
+}
+
+class ApiClient {
+  Future<String> _rawRequest(String path) async {
+    switch (path) {
+      case '/ok':
+        return 'data';
+      case '/offline':
+        throw SocketException('no route to host');
+      case '/slow':
+        throw TimeoutException('too slow');
+      case '/broken':
+        throw HttpStatusException(500);
+      default:
+        throw StateError('unexpected');
+    }
+  }
+
+  Future<(String?, Failure?)> get(String path) async {
+    try {
+      final data = await _rawRequest(path);
+      return (data, null);
+    } on SocketException {
+      return (null, const NetworkFailure('No internet'));
+    } on TimeoutException {
+      return (null, const TimeoutFailure('Request timed out'));
+    } on HttpStatusException catch (e) {
+      return (null, ServerFailure('Server error ${e.code}', e.code));
+    } catch (_) {
+      return (null, const UnknownFailure('Unexpected error'));
+    }
+  }
+}
+
+void main() async {
+  final client = ApiClient();
+
+  for (final path in ['/ok', '/offline', '/slow', '/broken', '/other']) {
+    final (data, failure) = await client.get(path);
+    if (failure != null) {
+      print('$path -> ${failure.runtimeType}: ${failure.message}');
+    } else {
+      print('$path -> $data');
+    }
+  }
+}
+
+
+
