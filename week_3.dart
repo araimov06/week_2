@@ -8,6 +8,7 @@ void main(List<String> arguments) {
   print('Received: ${arguments[0]} and ${arguments[1]}');
 }
 
+
 import 'dart:io';
 
 void main(List<String> arguments) {
@@ -19,6 +20,7 @@ void main(List<String> arguments) {
   print('Arguments: ${arguments.join(", ")}');
   exitCode = 0;
 }
+
 
 void main(List<String> arguments) {
   final flags = <String, String>{};
@@ -50,6 +52,7 @@ void main() {
   }
 }
 
+
 void main() {
   (double, double, double) point = (1.5, 2.0, 3.5);
 
@@ -58,6 +61,7 @@ void main() {
   print(point.$3);
   print(point.$1 + point.$2 + point.$3);
 }
+
 
 typedef UserProfile = Map<String, dynamic>;
 typedef UserDirectory = Map<String, UserProfile>;
@@ -75,6 +79,7 @@ void main() {
       'tags': ['sql'],
     },
   };
+  
 
   users.forEach((id, profile) {
     print('$id: ${profile['name']}, age ${profile['age']}');
@@ -85,3 +90,67 @@ void main() {
 
 //task 3-------------------------
 
+void main() {
+  outer:
+  for (int i = 1; i <= 3; i++) {
+    for (int j = 1; j <= 3; j++) {
+      if (j == 2) continue outer;
+      if (i == 3) break outer;
+      print('i=$i j=$j');
+    }
+  }
+}
+
+
+void describe(Map<String, dynamic> json) {
+  switch (json) {
+    case {'type': 'circle', 'radius': num r}:
+      print('Circle area: ${3.14 * r * r}');
+    case {'type': 'rect', 'w': num w, 'h': num h}:
+      print('Rect area: ${w * h}');
+    case {'type': String t}:
+      print('Unknown shape: $t');
+    default:
+      print('Invalid input');
+  }
+}
+
+
+void main() {
+  describe({'type': 'circle', 'radius': 2});
+  describe({'type': 'rect', 'w': 3, 'h': 4});
+  describe({'type': 'triangle'});
+  describe({'name': 'x'});
+}
+
+
+enum AppState { created, started, resumed, paused, stopped, destroyed }
+
+const transitions = {
+  AppState.created: AppState.started,
+  AppState.started: AppState.resumed,
+  AppState.resumed: AppState.paused,
+  AppState.paused: AppState.stopped,
+  AppState.stopped: AppState.destroyed,
+};
+
+class Lifecycle extends Iterable<AppState> {
+  @override
+  Iterator<AppState> get iterator => _walk().iterator;
+
+  Iterable<AppState> _walk() sync* {
+    AppState? current = AppState.created;
+    while (current != null) {
+      yield current;
+      current = transitions[current];
+    }
+  }
+}
+
+void main() {
+  for (final state in Lifecycle()) {
+    print(state.name);
+  }
+}
+
+//task 4----------------------------
