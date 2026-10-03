@@ -154,3 +154,49 @@ void main() {
 }
 
 //task 4----------------------------
+
+int fib(int n) {
+  if (n <= 1) return n;
+  return fib(n - 1) + fib(n - 2);
+}
+
+void main() {
+  for (int i = 0; i <= 7; i++) {
+    print('fib($i) = ${fib(i)}');
+  }
+}
+
+
+Function makeCounter() {
+  int count = 0;
+  return () {
+    count++;
+    return count;
+  };
+}
+
+void main() {
+  final counterA = makeCounter();
+  final counterB = makeCounter();
+
+  print(counterA());
+  print(counterA());
+  print(counterA());
+  print(counterB());
+}
+
+
+T maxOf<T extends Comparable<T>>(T a, T b) {
+  return a.compareTo(b) >= 0 ? a : b;
+}
+
+void main() {
+  print(maxOf(3, 7));
+  print(maxOf(2.5, 1.5));
+  print(maxOf('apple', 'banana'));
+}
+
+
+//task 5--------------------------
+
+
