@@ -370,3 +370,82 @@ void main() {
 
 //task 7----------------------------
 
+enum Color { red, green, blue }
+
+Color? parseColor(String raw) {
+  try {
+    return Color.values.byName(raw);
+  } on ArgumentError {
+    return null;
+  }
+}
+
+void main() {
+  print(parseColor('green'));
+  print(parseColor('blue')?.index);
+  print(parseColor('purple'));
+}
+
+
+enum Unit<T extends num> {
+  meter<int>(1),
+  kilometer<int>(1000),
+  centimeter<double>(0.01);
+
+  final T factor;
+  const Unit(this.factor);
+
+  static Unit<num>? fromSymbol(String s) {
+    switch (s) {
+      case 'm':
+        return Unit.meter;
+      case 'km':
+        return Unit.kilometer;
+      case 'cm':
+        return Unit.centimeter;
+      default:
+        return null;
+    }
+  }
+
+  static double toMeters(num value, Unit<num> unit) => value * unit.factor;
+}
+
+void main() {
+  print(Unit.fromSymbol('km'));
+  print(Unit.toMeters(5, Unit.kilometer));
+  print(Unit.toMeters(250, Unit.centimeter));
+  print(Unit.fromSymbol('x'));
+}
+
+
+enum Light {
+  red(Duration(seconds: 30)),
+  green(Duration(seconds: 25)),
+  yellow(Duration(seconds: 5));
+
+  final Duration duration;
+  const Light(this.duration);
+
+  Light get next => switch (this) {
+        Light.red => Light.green,
+        Light.green => Light.yellow,
+        Light.yellow => Light.red,
+      };
+}
+
+void main() {
+  Light current = Light.red;
+  int total = 0;
+
+  for (int i = 0; i < 6; i++) {
+    print('${current.name} for ${current.duration.inSeconds}s');
+    total += current.duration.inSeconds;
+    current = current.next;
+  }
+
+  print('Total: $total');
+}
+
+
+//task 8-----------------------
