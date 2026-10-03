@@ -200,3 +200,85 @@ void main() {
 //task 5--------------------------
 
 
+/// A basic shape that can report its area.
+abstract class Shape {
+  /// Returns the area of this shape.
+  double area();
+
+  /// Returns the area of this shape.
+  ///
+  /// Deprecated: use [area] instead.
+  @deprecated
+  double getArea() => area();
+}
+
+/// A circle defined by its [radius].
+class Circle extends Shape {
+  /// The radius of the circle.
+  final double radius;
+
+  /// Creates a circle with the given [radius].
+  Circle(this.radius);
+
+  /// Computes the area as pi * radius * radius.
+  @override
+  double area() => 3.14159 * radius * radius;
+}
+
+void main() {
+  final c = Circle(2);
+  print(c.area());
+}
+
+
+/// A tiny in-memory storage API.
+library;
+
+/// A key-value store that keeps string values in memory.
+///
+/// Example:
+/// ```dart
+/// final store = KeyValueStore();
+/// store.put('port', '8080');
+/// print(store.get('port'));
+/// ```
+class KeyValueStore {
+  final Map<String, String> _data = {};
+
+  /// Stores [value] under [key], replacing any existing value.
+  void put(String key, String value) {
+    _data[key] = value;
+  }
+
+  /// Returns the value for [key], or `null` if [key] is not present.
+  String? get(String key) => _data[key];
+
+  /// Removes [key] and returns `true` if it existed, otherwise `false`.
+  bool remove(String key) => _data.remove(key) != null;
+
+  /// The number of entries currently stored.
+  int get length => _data.length;
+}
+
+
+include: package:lints/recommended.yaml
+
+analyzer:
+  errors:
+    public_member_api_docs: error
+    slash_for_doc_comments: error
+    comment_references: warning
+    provide_deprecation_message: error
+
+linter:
+  rules:
+    - public_member_api_docs
+    - slash_for_doc_comments
+    - comment_references
+    - provide_deprecation_message
+
+
+//task 6----------------------------
+
+
+
